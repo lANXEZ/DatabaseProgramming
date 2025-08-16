@@ -103,11 +103,10 @@
             */
 
             //--Ex5--
-
-            double totalPrice = 0;
+            /*
             Console.Write("Enter the number of items you want to add: ");
             int itemAmount = Convert.ToInt32(Console.ReadLine());
-            int[] cart = new int[itemAmount];
+            Cart myCart = new Cart(itemAmount);
             for (int i = 0; i < itemAmount; i++)
             {
                 Console.WriteLine("Select an item to add to the cart: ");
@@ -116,32 +115,84 @@
                 Console.WriteLine("3. Shoes - $75.00");
                 Console.Write("Enter your choice (1 - 3): ");
                 int choice = Convert.ToInt32(Console.ReadLine());
+                if (choice > 0 && choice <= 3)
+                {
+                    myCart.AddItem(choice, i);
+                }
+                else
+                {
+                    Console.WriteLine("Invalid choice. Please select a valid item.");
+                    i -= 1;
+                }
+
+                    Console.WriteLine();
+            }
+            myCart.DisplayCart();
+            */
+
+            //--Ex6--
+            bool isRun = true;
+            while (isRun)
+            {
+                Console.Write("Menu:\n1. Add a new student\n2. Display all students\n3. Search for a student by ID\n4. Exit\nEnter yout choice (1-4): ");
+                int choice = Convert.ToInt32(Console.ReadLine());
                 switch (choice)
                 {
                     case 1:
-                        cart[i] = 1;
-                        Console.WriteLine("Shirt added to cart.");
-                        totalPrice += 25.00;
+                        StudentDBMS.AddStudent();
                         break;
                     case 2:
-                        cart[i] = 2;
-                        Console.WriteLine("Jeans added to cart.");
-                        totalPrice += 50.00;
+                        StudentDBMS.DisplayAllStudents();
                         break;
                     case 3:
-                        cart[i] = 3;
-                        Console.WriteLine("Shoes added to cart.");
-                        totalPrice += 75.00;
+                        StudentDBMS.SearchStudentById();
+                        break;
+                    case 4:
+                        isRun = false;
                         break;
                     default:
-                        Console.WriteLine("Invalid choice. Please select a valid item.");
-                        i -= 1;
+                        Console.WriteLine("Please enter a valid choice.");
                         break;
                 }
                 Console.WriteLine();
+
             }
+
+
+
+        }
+    }
+    //--Ex5's class--
+    public class Cart(int amount)
+    {
+        int[] itemArr = new int[amount];
+        double totalPrice = 0;
+        public void AddItem(int itemID, int itemOrder)
+        {
+            itemArr[itemOrder] = itemID;
+            switch (itemID)
+            {
+                case 1:
+                    itemArr[itemOrder] = 1;
+                    Console.WriteLine("Shirt added to cart.");
+                    totalPrice += 25.00;
+                    break;
+                case 2:
+                    itemArr[itemOrder] = 2;
+                    Console.WriteLine("Jeans added to cart.");
+                    totalPrice += 50.00;
+                    break;
+                case 3:
+                    itemArr[itemOrder] = 3;
+                    Console.WriteLine("Shoes added to cart.");
+                    totalPrice += 75.00;
+                    break;
+            }
+        }
+        public void DisplayCart()
+        {
             Console.WriteLine("Items in your cart:");
-            foreach (int i in cart)
+            foreach (int i in itemArr)
             {
                 switch (i)
                 {
@@ -157,6 +208,59 @@
                 }
             }
             Console.WriteLine("Total Price: $" + totalPrice);
+        }
+    }
+    //--Ex6's class
+    class Student(int id, string name, int age)
+    {
+        public int id = id;
+        public string name = name;
+        public int age = age;
+    }
+
+    static class StudentDBMS
+    {
+        static Student[] students = new Student[10];
+        static int counter = 0;
+        public static void AddStudent()
+        {
+            Console.Write("Enter student name: ");
+            string name = Console.ReadLine();
+            Console.Write("Enter student age: ");
+            int age = Convert.ToInt32(Console.ReadLine());
+            students[counter] = new Student(counter + 1, name, age);
+            counter++;
+            Console.WriteLine("Student added successfully!");
+        }
+        public static  void DisplayAllStudents()
+        {
+            foreach (Student student in students)
+            {
+                if(student != null)
+                {
+                    Console.WriteLine($"ID: {student.id}, Name: {student.name}, Age: {student.age}");
+                }
+            }
+        }
+        public static void SearchStudentById()
+        {
+            Console.Write("Enter student ID to search: ");
+            int id = Convert.ToInt32(Console.ReadLine());
+            {
+                foreach (Student student in students)
+                {
+                    if (student == null)
+                    {
+                        Console.WriteLine("Student not found");
+                        break;
+                    }
+                    if (student.id == id)
+                    {
+                        Console.WriteLine($"Student found: ID: {student.id}, Name: {student.name}, Age: {student.age}");
+                        break;
+                    }
+                }
+            }
         }
     }
 }
